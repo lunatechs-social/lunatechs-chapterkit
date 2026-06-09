@@ -36,20 +36,30 @@ function copyDir(src, out) {
   }
 }
 
+// Inline the shared SSI includes into ANY .html file — so a chapter can add as many
+// freeform pages as it likes (recaps, event marketing/landing pages, …) and each one
+// can opt into the shared nav/footer/events/global just by leaving the include line in.
+function inlineShared(file) {
+  let html = fs.readFileSync(file, 'utf8');
+  html = html.replace(/<!--#include virtual="\/?(shared\/)?nav\.html"\s*-->/g, nav);
+  html = html.replace(/<!--#include virtual="\/?(shared\/)?footer\.html"\s*-->/g, footer);
+  html = html.replace(/<!--#include virtual="\/?(shared\/)?events\.html"\s*-->/g, events);
+  html = html.replace(/<!--#include virtual="\/?(shared\/)?global\.html"\s*-->/g, global);
+  fs.writeFileSync(file, html);
+}
+function inlineAll(dir) {
+  for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+    const p = path.join(dir, e.name);
+    if (e.isDirectory()) inlineAll(p);
+    else if (e.name.endsWith('.html')) inlineShared(p);
+  }
+}
+
 fs.rmSync(DIST, { recursive: true, force: true });
 const list = chapters();
 for (const ch of list) {
   const out = path.join(DIST, ch);
   copyDir(path.join(ROOT, ch), out);
-  const idx = path.join(out, 'index.html');
-  if (fs.existsSync(idx)) {
-    let html = fs.readFileSync(idx, 'utf8');
-    // inline the shared nav + footer (SSI-style includes) — the global shell
-    html = html.replace(/<!--#include virtual="\/?(shared\/)?nav\.html"\s*-->/g, nav);
-    html = html.replace(/<!--#include virtual="\/?(shared\/)?footer\.html"\s*-->/g, footer);
-    html = html.replace(/<!--#include virtual="\/?(shared\/)?events\.html"\s*-->/g, events);
-    html = html.replace(/<!--#include virtual="\/?(shared\/)?global\.html"\s*-->/g, global);
-    fs.writeFileSync(idx, html);
-  }
+  inlineAll(out); // every .html in the chapter, not just index.html
 }
 console.log(`✓ built ${list.length} chapters → dist/ : ${list.join(', ')}`);

@@ -1,0 +1,75 @@
+<!doctype html>
+<!-- ───────────────────────────────────────────────────────────────────────────
+     EVENT MARKETING / LANDING PAGE TEMPLATE.  Copy this folder, rename it
+     (e.g. events/claude-code-night/), and make it sing — this is the page you
+     share to sell the event. Go as custom as you want: countdowns, speaker grids,
+     sponsor logos, schedule. Keep the shared nav + footer includes and no
+     third-party <script>/<link> tags. For video, EMBED YouTube — don't host video
+     files here (see the Chapter Guide → media rules). Delete this example when done.
+─────────────────────────────────────────────────────────────────────────── -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{EVENT}} — {{CITY}} · {{DATE}}</title>
+  <meta name="description" content="{{EVENT}} in {{CITY}} — {{DATE}}. RSVP now." />
+  <meta property="og:title" content="{{EVENT}} — {{CITY}}" />
+  <meta property="og:image" content="banner.jpg" />
+  <link rel="stylesheet" href="/assets/fonts/fonts.css" />
+  <style>
+    :root{--bg:#06080f;--surface:#0c1120;--border:rgba(56,189,248,.14);--border-bright:rgba(56,189,248,.28);
+      --text:#f0f6ff;--text-secondary:#94a3b8;--text-dim:#64748b;--cyan:#22d3ee;--blue:#3b82f6;--gold:#fbbf24}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased}
+    a{color:var(--cyan)}.container{max-width:860px;margin:0 auto;padding:0 24px}
+    .hero{text-align:center;padding:120px 24px 40px}
+    .pill{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--gold);border:1px solid rgba(251,191,36,.4);border-radius:999px;padding:6px 14px;margin-bottom:18px}
+    .hero h1{font-size:clamp(32px,7vw,60px);font-weight:900;line-height:1.04}
+    .meta{font-family:'JetBrains Mono',monospace;color:#cfe0f5;margin:18px 0 26px}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:16px 32px;border-radius:12px;font-weight:700;font-size:16px;text-decoration:none;border:none;background:linear-gradient(135deg,var(--cyan),var(--blue));color:#04223f}
+    .banner{width:100%;border-radius:18px;border:1px solid var(--border);margin:8px 0 30px}
+    .section{padding:30px 0;border-top:1px solid var(--border)}h2{font-size:26px;font-weight:800;margin-bottom:12px}
+    p{color:var(--text-secondary);margin-bottom:14px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:8px}
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px}
+    .cta{text-align:center;padding:50px 0}
+  </style>
+</head>
+<body data-page="chapter" data-city="{{CITY}}">
+  <!--#include virtual="/shared/nav.html" -->
+
+  <header class="hero">
+    <span class="pill">✦ {{CITY}}</span>
+    <h1>{{EVENT}}</h1>
+    <div class="meta">{{DATE}} · {{VENUE}}</div>
+    <a class="btn" href="{{RSVP_URL}}">RSVP on Luma →</a>
+  </header>
+
+  <main class="container">
+    <img class="banner" src="banner.jpg" alt="{{EVENT}}" />
+
+    <section class="section">
+      <h2>What it is</h2>
+      <p>The pitch — who it's for, what you'll do, why it's worth a weeknight. No coding required, come tech with us.</p>
+    </section>
+
+    <section class="section">
+      <h2>What to expect</h2>
+      <div class="grid">
+        <div class="card"><strong>Hands-on</strong><p style="margin:6px 0 0">Bring a laptop and something you'd like to make.</p></div>
+        <div class="card"><strong>Real people</strong><p style="margin:6px 0 0">First-timers next to seasoned builders.</p></div>
+        <div class="card"><strong>Good vibes</strong><p style="margin:6px 0 0">Boba, snacks, and zero gatekeeping.</p></div>
+      </div>
+    </section>
+
+    <!-- Video? Embed YouTube — do NOT host .mp4 here. Example:
+    <section class="section"><h2>Watch</h2>
+      <iframe width="100%" height="430" src="https://www.youtube.com/embed/VIDEO_ID" title="" frameborder="0" allowfullscreen style="border-radius:14px;border:1px solid var(--border)"></iframe>
+    </section> -->
+
+    <div class="cta"><a class="btn" href="{{RSVP_URL}}">Save your spot →</a></div>
+  </main>
+
+  <!--#include virtual="/shared/footer.html" -->
+</body>
+</html>
