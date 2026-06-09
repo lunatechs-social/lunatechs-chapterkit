@@ -25,6 +25,9 @@ on:
 jobs:
   assemble:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write   # for AWS OIDC
+      contents: read
     steps:
       - name: Checkout chapter content
         uses: actions/checkout@v4
@@ -45,17 +48,27 @@ jobs:
           node scripts/build.mjs
           node scripts/validate.mjs
           echo "Built dist/${{ inputs.slug }}"
-      # ── deploy: only runs once subdomain hosting + secrets are configured ──
-      - name: Deploy to S3 + invalidate
+      # ── deploy: runs once HOSTING_READY + AWS_ROLE_ARN are set ──
+      - name: Configure AWS credentials (OIDC)
+        if: ${{ secrets.AWS_ROLE_ARN != '' }}
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: us-east-1
+      - name: Deploy to the chapter's subdomain prefix + invalidate
         if: ${{ secrets.AWS_ROLE_ARN != '' }}
         env:
-          BUCKET:  ${{ secrets.CHAPTER_BUCKET }}
-          DIST_ID: ${{ secrets.CLOUDFRONT_DIST_ID }}
+          BUCKET:  ${{ secrets.CHAPTER_BUCKET }}      # lunatechs-chapters
+          DIST_ID: ${{ secrets.CLOUDFRONT_DIST_ID }}  # E145GHOJCOZOLP
         run: |
-          aws s3 sync "kit/dist/${{ inputs.slug }}/" "s3://$BUCKET/" --delete --cache-control "max-age=300"
-          aws cloudfront create-invalidation --distribution-id "$DIST_ID" --paths "/*"
+          HOST=$(node -p "require('./content/chapter.json').subdomain")
+          aws s3 sync "kit/dist/${{ inputs.slug }}/" "s3://$BUCKET/$HOST/" --delete --cache-control "public, max-age=300"
+          aws cloudfront create-invalidation --distribution-id "$DIST_ID" --paths "/$HOST/*"
+          echo "deployed → https://$HOST/"
       - name: Health check
         if: ${{ secrets.AWS_ROLE_ARN != '' }}
         run: |
-          code=$(curl -s -o /dev/null -w "%{http_code}" "https://${{ inputs.slug }}.lunatechs.social/")
-          echo "${{ inputs.slug }} -> $code"; [ "$code" = "200" ] || { echo "::error::unhealthy"; exit 1; }
+          HOST=$(node -p "require('./content/chapter.json').subdomain")
+          sleep 10
+          code=$(curl -s -o /dev/null -w "%{http_code}" "https://$HOST/")
+          echo "$HOST -> $code"; [ "$code" = "200" ] || { echo "::error::unhealthy"; exit 1; }
