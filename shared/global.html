@@ -1,0 +1,122 @@
+<!-- Shared "part of the global community" module. Core-team owned; the build
+     inlines it wherever a chapter includes shared/global.html (SSI-style) and
+     injects shared/cities.json in place of the cities placeholder token.
+     Reads the body data-city attribute to name the chapter + light up its chip.
+     Drop it near the bottom, just above the footer. Keep it — it's how visitors
+     learn the local crew is plugged into the worldwide Lunatechs network. -->
+<section class="section lt-global" id="global">
+  <div class="container">
+    <div class="lt-global-card">
+      <div class="lt-global-grid" aria-hidden="true"></div>
+      <div class="lt-global-inner">
+        <span class="lt-global-badge"><span class="lt-pulse"></span> Global network</span>
+        <h2 class="lt-global-title">Lunatics, <span>worldwide</span></h2>
+        <p class="lt-global-copy">
+          <strong class="lt-global-city">This chapter</strong> is one city in Lunatechs — a worldwide
+          community of tech lunatics building, learning, and hanging out together. Same ethos in every
+          chapter: no gatekeeping, no coding required, just come tech with us. Your local crew runs the
+          events here — and you're plugged into the whole global network.
+        </p>
+
+        <!-- City carousel — auto-scrolling, two rows, lit by status -->
+        <div class="lt-cities">
+          <div class="lt-cities-head">
+            <span class="lt-stat" id="lt-stat">Live chapters</span>
+          </div>
+          <div class="lt-carousel">
+            <div class="lt-track" id="lt-track"></div>
+          </div>
+        </div>
+
+        <div class="lt-global-links">
+          <a class="btn btn-primary" href="https://lunatechs.social/global/">Explore the global map →</a>
+          <a class="btn btn-ghost" href="https://lunatechs.social/links/">Start a chapter in your city</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <style>
+    .lt-global .lt-global-card{position:relative;overflow:hidden;border:1px solid var(--border-bright,rgba(56,189,248,.28));border-radius:24px;
+      background:radial-gradient(120% 140% at 0% 0%,rgba(34,211,238,.12),transparent 55%),
+                 radial-gradient(120% 150% at 100% 100%,rgba(59,130,246,.16),transparent 55%),
+                 var(--surface,#0c1120)}
+    /* faint dot-grid "world map" texture */
+    .lt-global .lt-global-grid{position:absolute;inset:0;background-image:radial-gradient(rgba(56,189,248,.16) 1px,transparent 1.4px);background-size:22px 22px;
+      -webkit-mask:radial-gradient(120% 120% at 70% 30%,#000,transparent 75%);mask:radial-gradient(120% 120% at 70% 30%,#000,transparent 75%);opacity:.5;pointer-events:none}
+    .lt-global .lt-global-inner{position:relative;padding:46px clamp(22px,5vw,52px)}
+    .lt-global .lt-global-badge{display:inline-flex;align-items:center;gap:9px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan,#22d3ee);border:1px solid var(--border-bright,rgba(56,189,248,.28));background:rgba(34,211,238,.08);border-radius:999px;padding:7px 15px;margin-bottom:18px}
+    .lt-global .lt-pulse{width:8px;height:8px;border-radius:50%;background:#7CF0B0;box-shadow:0 0 0 0 rgba(124,240,176,.7);animation:lt-pulse 2.4s ease-out infinite}
+    @keyframes lt-pulse{0%{box-shadow:0 0 0 0 rgba(124,240,176,.6)}70%{box-shadow:0 0 0 9px rgba(124,240,176,0)}100%{box-shadow:0 0 0 0 rgba(124,240,176,0)}}
+    .lt-global .lt-global-title{font-size:clamp(25px,4vw,36px);font-weight:800;line-height:1.12;margin-bottom:14px}
+    .lt-global .lt-global-title span{background:linear-gradient(135deg,var(--cyan,#22d3ee),var(--blue,#3b82f6));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+    .lt-global .lt-global-copy{color:var(--text-secondary,#94a3b8);font-size:16px;line-height:1.75;max-width:640px;margin-bottom:26px}
+    .lt-global .lt-global-copy strong{color:var(--text,#f0f6ff);font-weight:700}
+
+    /* carousel */
+    .lt-global .lt-cities{margin:0 0 28px}
+    .lt-global .lt-cities-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+    .lt-global .lt-stat{font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:700;letter-spacing:.04em;color:var(--text-dim,#64748b)}
+    .lt-global .lt-legend{display:flex;gap:16px}
+    .lt-global .lt-leg{display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--text-dim,#64748b)}
+    .lt-global .lt-leg .dot{width:8px;height:8px;border-radius:50%}
+    .lt-global .lt-leg .dot.live{background:#7CF0B0;box-shadow:0 0 7px #7CF0B0}
+    .lt-global .lt-leg .dot.wanted{background:transparent;border:1px solid var(--text-dim,#64748b)}
+    /* graphic city cards — same look as the /global/ page; centered row of LIVE chapters */
+    .lt-global .lt-carousel{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+    .lt-global .lt-track{display:flex;gap:16px;flex-wrap:nowrap;justify-content:safe center}
+    .lt-global .lt-ccard{flex:none;width:240px;border-radius:18px;overflow:hidden;text-decoration:none;
+      border:1px solid rgba(120,170,220,.16);background:#0a1524;box-shadow:0 18px 46px -26px rgba(0,0,0,.8);
+      transition:transform .3s cubic-bezier(.2,.7,.2,1),border-color .3s,box-shadow .3s}
+    .lt-global .lt-ccard:hover{transform:translateY(-5px);border-color:rgba(34,211,238,.5);box-shadow:0 28px 64px -24px rgba(0,80,176,.5)}
+    .lt-global .lt-ccard img{display:block;width:100%;height:150px;object-fit:cover}
+    .lt-global .lt-cc-meta{padding:14px 16px 16px}
+    .lt-global .lt-cc-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .lt-global .lt-cc-city{font-size:17px;font-weight:700;letter-spacing:-.2px;color:var(--text,#f0f6ff)}
+    .lt-global .lt-cc-tag{color:var(--text-dim,#64748b);font-size:12.5px;line-height:1.5;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .lt-global .lt-cc-status{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;border-radius:999px;padding:5px 11px;border:1px solid rgba(252,216,48,.4);color:var(--gold,#fbbf24)}
+    .lt-global .lt-cc-status.live{color:#7CF0B0;border-color:rgba(124,240,176,.4)}
+    .lt-global .lt-ccard.here{border-color:var(--gold,#fbbf24);box-shadow:0 0 0 1px var(--gold,#fbbf24),0 18px 46px -26px rgba(0,0,0,.8)}
+
+    .lt-global .lt-global-links{display:flex;gap:14px;flex-wrap:wrap}
+    .lt-global .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 26px;border-radius:12px;font-weight:600;font-size:15px;text-decoration:none;border:none}
+    .lt-global .btn-primary{background:linear-gradient(135deg,var(--cyan,#22d3ee),var(--blue,#3b82f6));color:#000}
+    .lt-global .btn-ghost{background:rgba(12,17,32,.5);color:var(--cyan,#22d3ee);border:1px solid var(--border-bright,rgba(56,189,248,.28))}
+    @media (prefers-reduced-motion: reduce){
+      .lt-global .lt-track{animation:none}
+      .lt-global .lt-carousel{-webkit-mask:none;mask:none;overflow-x:auto;scroll-snap-type:x mandatory}
+      .lt-global .lt-ccard{scroll-snap-align:start}
+      .lt-global .lt-pulse{animation:none}
+    }
+    @media (max-width:600px){ .lt-global .lt-global-inner{padding:36px 22px} }
+  </style>
+  <script>
+    (function(){
+      var CITIES = "__CITIES__";
+      if(!Array.isArray(CITIES)) return;
+      var city = document.body && document.body.dataset ? document.body.dataset.city : '';
+      // name the chapter in the headline
+      if(city){ var nm=document.querySelector('.lt-global .lt-global-city'); if(nm) nm.textContent='Lunatechs '+city; }
+      // only LIVE chapters get cards
+      var liveCities = CITIES.filter(function(c){return c.status==='live';});
+      var stat = document.getElementById('lt-stat');
+      if(stat) stat.textContent = liveCities.length + ' live chapter' + (liveCities.length===1?'':'s') + ' and counting';
+      // graphic city cards (same look as the /global/ page)
+      function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;'); }
+      function card(c){
+        var live = c.status==='live';
+        var here = city && c.city.toLowerCase()===city.toLowerCase();
+        var href = c.url || 'https://lunatechs.social/links/';
+        var img = 'https://lunatechs.social/global/' + c.img;
+        var status = live ? '<span class="lt-cc-status live">✦ Live</span>'
+                          : '<span class="lt-cc-status">Start →</span>';
+        return '<a class="lt-ccard'+(here?' here':'')+'" href="'+href+'">'
+             + '<img src="'+img+'" alt="Lunatechs '+esc(c.city)+'" loading="lazy">'
+             + '<div class="lt-cc-meta"><div class="lt-cc-row"><span class="lt-cc-city">'+(here?'📍 ':'')+esc(c.city)+'</span>'+status+'</div>'
+             + (c.tagline?'<div class="lt-cc-tag">'+esc(c.tagline)+'</div>':'')
+             + '</div></a>';
+      }
+      var track = document.getElementById('lt-track');
+      if(track) track.innerHTML = liveCities.map(card).join('');
+    })();
+  </script>
+</section>

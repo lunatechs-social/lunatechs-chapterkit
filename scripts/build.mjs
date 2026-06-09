@@ -10,6 +10,13 @@ const DIST = path.join(ROOT, 'dist');
 const SKIP = new Set(['scripts', 'shared', 'dist', 'node_modules', '.git', '.github']);
 const nav = fs.readFileSync(path.join(ROOT, 'shared', 'nav.html'), 'utf8');
 const footer = fs.readFileSync(path.join(ROOT, 'shared', 'footer.html'), 'utf8');
+const events = fs.readFileSync(path.join(ROOT, 'shared', 'events.html'), 'utf8');
+// global module + its city list (core-owned). Inject the cities JSON at build
+// time so each chapter ships the data inline (no cross-origin fetch / missing file).
+const cities = fs.readFileSync(path.join(ROOT, 'shared', 'cities.json'), 'utf8').trim();
+const global = fs
+  .readFileSync(path.join(ROOT, 'shared', 'global.html'), 'utf8')
+  .replace('"__CITIES__"', cities);
 
 function chapters() {
   return fs.readdirSync(ROOT).filter((d) => {
@@ -40,6 +47,8 @@ for (const ch of list) {
     // inline the shared nav + footer (SSI-style includes) — the global shell
     html = html.replace(/<!--#include virtual="\/?(shared\/)?nav\.html"\s*-->/g, nav);
     html = html.replace(/<!--#include virtual="\/?(shared\/)?footer\.html"\s*-->/g, footer);
+    html = html.replace(/<!--#include virtual="\/?(shared\/)?events\.html"\s*-->/g, events);
+    html = html.replace(/<!--#include virtual="\/?(shared\/)?global\.html"\s*-->/g, global);
     fs.writeFileSync(idx, html);
   }
 }

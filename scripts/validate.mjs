@@ -20,6 +20,14 @@ function validateChapter(ch) {
   if (!/<title>[^<]+<\/title>/i.test(html)) err(ch, 'missing <title>');
   if (!html.includes('site-header')) err(ch, 'missing shared nav — keep the <!--#include …/nav.html--> line');
   if (!html.includes('lt-footer')) err(ch, 'missing shared footer — keep the <!--#include …/footer.html--> line');
+  // the shared nav links to these local anchors — they must exist or the nav is broken
+  for (const id of ['events', 'about', 'connect']) {
+    if (!new RegExp(`id=["']${id}["']`).test(html)) err(ch, `missing id="${id}" section (the shared nav's local links point here)`);
+  }
+  // an HTML comment that contains "-->" closes early and leaks text — guard against it
+  for (const c of html.match(/<!--[\s\S]*?-->/g) || []) {
+    if (c.includes('<!--#include')) err(ch, 'a comment contains a literal SSI include (nested "-->" leaks text) — reword it');
+  }
   // no third-party loaded resources (scripts/fonts/styles)
   for (const h of BANNED_HOSTS) if (html.includes(h)) err(ch, `third-party resource not allowed: ${h} (self-host instead)`);
   // catch <script src="http…external"> / <link href="http…external">

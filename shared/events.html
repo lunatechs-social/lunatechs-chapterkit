@@ -1,0 +1,163 @@
+<!-- Shared, standardized event cards — IDENTICAL to the main site's /events/ page.
+     Core-team owned; the build inlines it wherever a chapter includes
+     shared/events.html (SSI-style). Renders from THIS chapter's
+     events.json (relative). Upcoming = full-width banner + body; past = Luma
+     graphic + event photo strip on top, body below. Keep events.json in the
+     documented format (see _starter/events.json). -->
+<section class="section" id="events">
+  <div class="container">
+    <span class="section-label">Upcoming</span>
+    <h2 class="section-title">Events</h2>
+    <div class="events-grid" id="lt-upcoming"></div>
+    <div id="lt-past-section" style="margin-top:48px">
+      <div class="past-head">
+        <div>
+          <span class="section-label">Past</span>
+          <h2 class="section-title" style="margin-bottom:0">Recaps</h2>
+        </div>
+        <div class="view-toggle" id="lt-view-toggle" style="display:none">
+          <button class="view-btn" data-view="list" onclick="ltSetView('list')" aria-label="List view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>List</button>
+          <button class="view-btn" data-view="grid" onclick="ltSetView('grid')" aria-label="Grid view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Grid</button>
+        </div>
+      </div>
+      <div class="events-grid layout-list" id="lt-past" style="margin-top:18px"></div>
+    </div>
+  </div>
+  <style>
+    /* ── Event cards — verbatim from the main site /events/ page ── */
+    #events .events-grid{display:grid;grid-template-columns:1fr;gap:24px;margin-top:8px}
+    #events .event-card{background:var(--surface,#0c1120);border:1px solid var(--border,rgba(56,189,248,.14));border-radius:20px;overflow:hidden;transition:all .3s ease}
+    #events .event-card:hover{border-color:var(--border-bright,rgba(56,189,248,.28));transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.4)}
+    #events .event-card.upcoming{border-color:var(--gold,#fbbf24);box-shadow:0 0 24px rgba(251,191,36,.12)}
+    #events .event-card.upcoming .event-card-date{color:var(--gold,#fbbf24)}
+    #events .event-card.upcoming .event-card-graphic{width:100%;display:block}
+    /* Past with photos: graphic + photo strip on top, content below */
+    #events .event-card.past-with-photos{display:block}
+    #events .event-card-images{display:grid;grid-template-columns:360px 1fr;gap:0;height:360px}
+    #events .event-card-images img:first-child{width:360px;height:360px;object-fit:cover}
+    #events .event-card-images img:last-child{width:100%;height:360px;object-fit:cover}
+    #events .event-card-images.no-photo{grid-template-columns:360px;justify-content:center}
+    #events .event-card-images.no-photo img:first-child{width:360px;height:360px;object-fit:cover}
+    #events .event-card-body{padding:28px 32px}
+    #events .event-card-date{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--gold,#fbbf24);font-weight:600;margin-bottom:8px;letter-spacing:1px}
+    #events .event-card-title{font-size:22px;font-weight:800;margin-bottom:8px;line-height:1.3}
+    #events .event-card-title a{color:var(--text,#f0f6ff);text-decoration:none;transition:color .2s}
+    #events .event-card-title a:hover{color:var(--cyan,#22d3ee)}
+    #events .event-card-summary{color:var(--text-secondary,#94a3b8);font-size:15px;line-height:1.7;margin-bottom:20px}
+    #events .event-card-stats{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:20px}
+    #events .event-stat{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-dim,#64748b);display:flex;align-items:center;gap:6px}
+    #events .event-stat strong{color:var(--cyan,#22d3ee);font-size:14px}
+    #events .event-empty{color:var(--text-secondary,#94a3b8);font-size:16px;line-height:1.7}
+    #events .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 26px;border-radius:12px;font-weight:600;font-size:15px;text-decoration:none;border:none}
+    #events .btn-primary{background:linear-gradient(135deg,var(--cyan,#22d3ee),var(--blue,#3b82f6));color:#000}
+    #events .btn-wa{background:#25D366;color:#06281a}
+    /* ── Past: list / grid view toggle ── */
+    #events .past-head{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:14px}
+    #events .view-toggle{display:inline-flex;gap:4px;padding:4px;border:1px solid var(--border-bright,rgba(56,189,248,.28));border-radius:12px;background:rgba(255,255,255,.025)}
+    #events .view-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border:none;border-radius:9px;background:transparent;color:var(--text-secondary,#94a3b8);font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.3px;cursor:pointer;transition:all .2s ease}
+    #events .view-btn svg{width:14px;height:14px}
+    #events .view-btn:hover{color:var(--text,#f0f6ff)}
+    #events .view-btn.active{background:linear-gradient(135deg,var(--cyan,#22d3ee),var(--blue,#3b82f6));color:#000}
+    /* dense grid (gallery) layout: branded square banner, hide photo/summary/stats */
+    #events #lt-past.layout-grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px}
+    #events #lt-past.layout-grid .event-card-images,#events #lt-past.layout-grid .event-card-images.no-photo{grid-template-columns:1fr;height:auto}
+    #events #lt-past.layout-grid .event-card-images img:first-child{width:100%;height:auto;aspect-ratio:1/1}
+    #events #lt-past.layout-grid .event-card-images img:last-child{display:none}
+    #events #lt-past.layout-grid .event-card-body{padding:18px 20px}
+    #events #lt-past.layout-grid .event-card-summary{display:none}
+    #events #lt-past.layout-grid .event-card-stats{display:none}
+    #events #lt-past.layout-grid .event-card-title{font-size:17px}
+    #events #lt-past.layout-grid .btn{padding:9px 16px;font-size:13px}
+    @media(max-width:560px){
+      #events #lt-past.layout-grid{grid-template-columns:1fr 1fr;gap:12px}
+      #events #lt-past.layout-grid .event-card-body{padding:12px 14px}
+      #events #lt-past.layout-grid .event-card-title{font-size:14px}
+      #events #lt-past.layout-grid .btn{display:none}
+    }
+    @media(max-width:640px){
+      #events .event-card-images{grid-template-columns:140px 1fr;height:140px}
+      #events .event-card-images img:first-child{width:140px;height:140px}
+      #events .event-card-images img:last-child{height:140px}
+      #events .event-card-images.no-photo{grid-template-columns:140px}
+      #events .event-card-images.no-photo img:first-child{width:140px;height:140px}
+      #events .event-card-body{padding:24px}
+    }
+  </style>
+  <script>
+  (async function(){
+    let events=[];
+    try{ events = await (await fetch('events.json')).json(); }catch(e){ console.error('events.json load failed',e); }
+    const now=new Date();
+    const upcoming=events.filter(e=>e.dateTbd||new Date(e.date)>now).sort((a,b)=>new Date(a.date)-new Date(b.date));
+    const past=events.filter(e=>!e.dateTbd&&new Date(e.date)<=now).sort((a,b)=>new Date(b.date)-new Date(a.date));
+    const M=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+    const fmt=d=>{const x=new Date(d);return M[x.getMonth()]+' '+x.getDate()+', '+x.getFullYear();};
+    const time=(d,end)=>{const x=new Date(d);const t=h=>{const p=h>=12?'PM':'AM';const hr=h>12?h-12:(h===0?12:h);return hr+p;};let s=t(x.getHours());if(end){s+='–'+t(+end.split(':')[0]);}return s;};
+    const banner=e=>e.lumaGraphic||e.image||'';
+
+    // ── Upcoming — full-width banner + body ──
+    const up=document.getElementById('lt-upcoming');
+    up.innerHTML = upcoming.length ? upcoming.map(e=>{
+      const tbd=e.dateTbd, cta=e.landingUrl||e.lumaUrl||e.rsvpUrl||'#';
+      const dateStr=tbd?'Date &amp; venue — TBD':(fmt(e.date)+' · '+time(e.date,e.endTime));
+      const label=tbd?'Get notified →':(e.landingUrl?'See the lineup →':'RSVP on Luma');
+      return `
+      <article class="event-card upcoming">
+        ${banner(e)?`<img class="event-card-graphic" src="${banner(e)}" alt="${e.title} event graphic" loading="lazy" />`:''}
+        <div class="event-card-body">
+          <div class="event-card-date">${dateStr}</div>
+          <h3 class="event-card-title" style="font-size:26px">${tbd?e.title:`<a href="${cta}">${e.title}</a>`}</h3>
+          ${e.summary?`<p class="event-card-summary">${e.summary}</p>`:''}
+          ${(e.location&&!tbd)?`<div class="event-card-stats"><span class="event-stat">${e.location}</span></div>`:''}
+          <a class="btn ${tbd?'btn-wa':'btn-primary'}" href="${cta}" style="align-self:flex-start">${label}</a>
+        </div>
+      </article>`;
+    }).join('') : `<p class="event-empty">Next one’s brewing — check back soon, or follow us on <a href="https://luma.com/lunatechs" style="color:var(--cyan,#22d3ee)">Luma</a> to get notified.</p>`;
+
+    // ── Past — Luma graphic + event photo strip on top, body below ──
+    const ps=document.getElementById('lt-past-section'), pe=document.getElementById('lt-past');
+    if(past.length){ pe.innerHTML=past.map(e=>{
+      const imageHtml = e.photo
+        ? `<div class="event-card-images">
+            <img src="${banner(e)}" alt="${e.title} event graphic" loading="lazy" />
+            <img src="${e.photo}" alt="${e.title} photo" loading="lazy" />
+           </div>`
+        : `<div class="event-card-images no-photo">
+            <img src="${banner(e)}" alt="${e.title} event graphic" loading="lazy" />
+           </div>`;
+      const titleHtml = e.recapUrl
+        ? `<h3 class="event-card-title"><a href="${e.recapUrl}">${e.title}</a></h3>`
+        : `<h3 class="event-card-title">${e.title}</h3>`;
+      const locationStat = e.location ? `<span class="event-stat">${e.location}${e.endTime?' · '+time(e.date,e.endTime):''}</span>` : '';
+      const statsHtml = (e.stats && e.stats.length>0)
+        ? `<div class="event-card-stats">${e.stats.map(s=>`<span class="event-stat"><strong>${s.value}</strong> ${s.label}</span>`).join('')}</div>${locationStat?`<div class="event-card-stats">${locationStat}</div>`:''}`
+        : (locationStat?`<div class="event-card-stats">${locationStat}</div>`:'');
+      const recapBtn = e.recapUrl ? `<a class="btn btn-primary" href="${e.recapUrl}" style="align-self:flex-start">View Full Recap →</a>` : '';
+      return `
+        <article class="event-card past-with-photos">
+          ${imageHtml}
+          <div class="event-card-body">
+            <div class="event-card-date">${fmt(e.date)}</div>
+            ${titleHtml}
+            ${e.summary?`<p class="event-card-summary">${e.summary}</p>`:''}
+            ${statsHtml}
+            ${recapBtn}
+          </div>
+        </article>`;
+    }).join('');
+      // list / grid view toggle — default to grid when there are more than 3 recaps
+      window.ltSetView=function(view){
+        var grid=view==='grid';
+        pe.classList.toggle('layout-grid',grid);
+        pe.classList.toggle('layout-list',!grid);
+        document.querySelectorAll('#lt-view-toggle .view-btn').forEach(function(b){b.classList.toggle('active',b.dataset.view===view);});
+        try{localStorage.setItem('lt-past-view',view);}catch(e){}
+      };
+      var vt=document.getElementById('lt-view-toggle');
+      if(past.length>=2 && vt) vt.style.display='inline-flex';
+      var saved=null; try{saved=localStorage.getItem('lt-past-view');}catch(e){}
+      ltSetView(saved || (past.length>3?'grid':'list'));
+    } else { ps.style.display='none'; }
+  })();
+  </script>
+</section>

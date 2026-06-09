@@ -4,8 +4,15 @@ Your fully-custom chapter site (served at `<slug>.lunatechs.social`). Do anythin
 this starter is just a head start. Read the root `CLAUDE.md` for the rules.
 
 ## Must keep (CI enforces)
-- The shared **nav** include (`<!--#include virtual="/shared/nav.html" -->`) and
-  **footer** include — the global shell (brand + nav back + later: login).
+- The three shared includes — the global shell, all core-owned:
+  - **nav** (`/shared/nav.html`) — local-first: Events / About / Contact jump to YOUR
+    page; one "Global ↗" link goes back to the worldwide site.
+  - **global** (`/shared/global.html`) — the "you're part of the worldwide LunaTechs
+    community" module. Keep it near the bottom, above the footer.
+  - **footer** (`/shared/footer.html`).
+- **Nav anchor contract** — your page MUST have sections with `id="events"`, `id="about"`,
+  and `id="connect"` (the starter ships them) so the shared nav's local links work.
+- **`<body data-city="...">`** — names your chapter in the nav chip + the global module.
 - **`events.json`** in the given format (array; each event needs `title` + `date`).
   The main site's `/<city>/` page and the global feed read this file.
 - **No third-party resources** (no Google Fonts / CDN scripts). Use `/assets/fonts/fonts.css`.

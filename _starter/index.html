@@ -39,7 +39,7 @@
     .photo-grid img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;border:1px solid var(--border)}
   </style>
 </head>
-<body data-page="chapter">
+<body data-page="chapter" data-city="{{CITY}}">
   <!--#include virtual="/shared/nav.html" -->
 
   <!-- ───────── HERO — this is YOURS. Rewrite it, restyle it, go wild. ───────── -->
@@ -54,16 +54,8 @@
     </div>
   </header>
 
-  <!-- ───────── EVENTS — rendered from events.json (keep this file + its format) ───────── -->
-  <section class="section" id="events">
-    <div class="container">
-      <span class="section-label">Upcoming</span>
-      <h2 class="section-title">Events</h2>
-      <div class="evt-grid" id="upcoming"></div>
-      <span class="section-label" style="margin-top:40px">Past</span>
-      <div class="evt-grid" id="past"></div>
-    </div>
-  </section>
+  <!-- ───────── EVENTS — standardized shared component (renders from events.json) ───────── -->
+  <!--#include virtual="/shared/events.html" -->
 
   <!-- ───────── PHOTOS — rendered from photos.json (a freeform "database" — any shape) ───────── -->
   <section class="section" id="photos">
@@ -74,22 +66,37 @@
     </div>
   </section>
 
+  <!-- ───────── ABOUT — make this yours. The nav's "About" links here (id="about"). ───────── -->
+  <section class="section" id="about">
+    <div class="container">
+      <span class="section-label">About</span>
+      <h2 class="section-title">About {{CITY}}</h2>
+      <p style="color:var(--text-secondary);font-size:16px;line-height:1.75;max-width:640px">
+        Tell people who you are. What does a LunaTechs {{CITY}} night feel like? Who shows up?
+        No gatekeeping, no coding required — just come tech with us.
+      </p>
+    </div>
+  </section>
+
+  <!-- ───────── CONNECT — your local "contact" section. The nav's "Contact" links here (id="connect"). ───────── -->
+  <section class="section" id="connect">
+    <div class="container">
+      <span class="section-label">Connect</span>
+      <h2 class="section-title">Follow {{CITY}}</h2>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="{{JOIN_URL}}">Join the community →</a>
+        <!-- Add your local links: WhatsApp, Instagram, Luma, email, etc. -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────── PART OF THE GLOBAL COMMUNITY (shared — keep it) ───────── -->
+  <!--#include virtual="/shared/global.html" -->
+
   <!--#include virtual="/shared/footer.html" -->
 
   <script>
-    const fmtDate = d => { const m=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; const x=new Date(d); return `${m[x.getMonth()]} ${x.getDate()}, ${x.getFullYear()}`; };
-    // EVENTS — from the contracted events.json (array of {title, date, ...})
-    fetch('events.json').then(r=>r.json()).then(events=>{
-      const now=new Date();
-      const up=events.filter(e=>new Date(e.date)>now).sort((a,b)=>new Date(a.date)-new Date(b.date));
-      const past=events.filter(e=>new Date(e.date)<=now).sort((a,b)=>new Date(b.date)-new Date(a.date));
-      const card=e=>`<div class="evt"><div class="evt-date">${fmtDate(e.date)}${e.location?' · '+e.location:''}</div>
-        <h3>${e.title}</h3>${e.summary?`<p>${e.summary}</p>`:''}${e.rsvpUrl?`<p><a href="${e.rsvpUrl}">RSVP →</a></p>`:''}</div>`;
-      document.getElementById('upcoming').innerHTML = up.length ? up.map(card).join('')
-        : `<div class="empty">Next one's brewing — check back soon.</div>`;
-      document.getElementById('past').innerHTML = past.map(card).join('');
-    }).catch(()=>{ document.getElementById('upcoming').innerHTML='<div class="empty">events.json not found.</div>'; });
-
+    // (Events render comes from the shared /shared/events.html component above.)
     // PHOTOS — from a freeform photos.json (here: an array of {src, caption}) — make it any shape you want
     fetch('photos.json').then(r=>r.json()).then(photos=>{
       document.getElementById('gallery').innerHTML = photos.map(p=>`<img src="${p.src}" alt="${p.caption||''}" loading="lazy">`).join('');

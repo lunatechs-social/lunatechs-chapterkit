@@ -1,0 +1,16 @@
+[
+  { "city": "Hong Kong",      "status": "live",   "url": "https://lunatechs.social/hongkong/",   "img": "hong-kong.jpg",      "tagline": "Where the lunatics first gathered." },
+  { "city": "Singapore",      "status": "live",   "url": "https://lunatechs.social/singapore/",  "img": "singapore.jpg",      "tagline": "Lion City lunatics, this one's for you." },
+  { "city": "Los Angeles",    "status": "live",   "url": "https://lunatechs.social/losangeles/", "img": "los-angeles.jpg",    "tagline": "West-coast lunatics, assemble." },
+  { "city": "San Francisco",  "status": "wanted", "img": "san-francisco.jpg",  "tagline": "Bay Area lunatics, unite." },
+  { "city": "Silicon Valley", "status": "wanted", "img": "silicon-valley.jpg", "tagline": "Where the chips & startups are born." },
+  { "city": "New York",       "status": "wanted", "img": "new-york.jpg",       "tagline": "East-coast lunatics, unite." },
+  { "city": "Tokyo",          "status": "wanted", "img": "tokyo.jpg",          "tagline": "Where neon meets next-gen tech." },
+  { "city": "Seoul",          "status": "wanted", "img": "seoul.jpg",          "tagline": "K-tech lunatics, this one's for you." },
+  { "city": "Taipei",         "status": "wanted", "img": "taipei.jpg",         "tagline": "Hardware heart of the island." },
+  { "city": "Shanghai",       "status": "wanted", "img": "shanghai.jpg",       "tagline": "Pudong skyline, Pearl of the East." },
+  { "city": "Shenzhen",       "status": "wanted", "img": "shenzhen.jpg",       "tagline": "China's hardware capital." },
+  { "city": "London",         "status": "wanted", "img": "london.jpg",         "tagline": "UK lunatics, the doors are open." },
+  { "city": "Berlin",         "status": "wanted", "img": "berlin.jpg",         "tagline": "Europe's startup playground." },
+  { "city": "Bengaluru",      "status": "wanted", "img": "bengaluru.jpg",      "tagline": "India's Silicon Plateau." }
+]
