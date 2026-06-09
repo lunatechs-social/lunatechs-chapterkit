@@ -4,6 +4,7 @@ name: assemble
 # stays consistent and guarded — a chapter can only ever publish its own folder.
 #
 # Called from a chapter repo's .github/workflows/deploy.yml:
+#   permissions: { id-token: write, contents: read }
 #   jobs:
 #     ship:
 #       uses: lunatechs-social/lunatechs-chapterkit/.github/workflows/assemble.yml@main
@@ -17,10 +18,9 @@ on:
         required: true
         type: string
     secrets:
-      KIT_READ_TOKEN:    { required: false }   # PAT that can read the (private) kit
-      AWS_ROLE_ARN:      { required: false }
-      CHAPTER_BUCKET:    { required: false }
-      CLOUDFRONT_DIST_ID:{ required: false }
+      AWS_ROLE_ARN:       { required: true }
+      CHAPTER_BUCKET:     { required: true }
+      CLOUDFRONT_DIST_ID: { required: true }
 
 jobs:
   assemble:
@@ -36,7 +36,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: lunatechs-social/lunatechs-chapterkit
-          token: ${{ secrets.KIT_READ_TOKEN || github.token }}
           path: kit
       - uses: actions/setup-node@v4
         with: { node-version: '20' }
@@ -48,15 +47,12 @@ jobs:
           node scripts/build.mjs
           node scripts/validate.mjs
           echo "Built dist/${{ inputs.slug }}"
-      # ── deploy: runs once HOSTING_READY + AWS_ROLE_ARN are set ──
       - name: Configure AWS credentials (OIDC)
-        if: ${{ secrets.AWS_ROLE_ARN != '' }}
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: us-east-1
       - name: Deploy to the chapter's subdomain prefix + invalidate
-        if: ${{ secrets.AWS_ROLE_ARN != '' }}
         env:
           BUCKET:  ${{ secrets.CHAPTER_BUCKET }}      # lunatechs-chapters
           DIST_ID: ${{ secrets.CLOUDFRONT_DIST_ID }}  # E145GHOJCOZOLP
@@ -66,7 +62,6 @@ jobs:
           aws cloudfront create-invalidation --distribution-id "$DIST_ID" --paths "/$HOST/*"
           echo "deployed → https://$HOST/"
       - name: Health check
-        if: ${{ secrets.AWS_ROLE_ARN != '' }}
         run: |
           HOST=$(node -p "require('./content/chapter.json').subdomain")
           sleep 10
