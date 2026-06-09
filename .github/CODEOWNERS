@@ -1,0 +1,6 @@
+# Core team owns the shared rails — chapter owners can't change these.
+/shared/        @lunatechs-social/core
+/scripts/       @lunatechs-social/core
+/.github/       @lunatechs-social/core
+/CLAUDE.md      @lunatechs-social/core
+/README.md      @lunatechs-social/core

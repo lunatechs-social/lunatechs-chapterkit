@@ -1,0 +1,19 @@
+[
+  {
+    "slug": "2026-sg-vibe-coding-101",
+    "title": "Vibe Coding 101 with Claude Code",
+    "date": "2026-12-31T18:00:00+08:00",
+    "dateTbd": true,
+    "endTime": "",
+    "location": "Singapore · venue TBD",
+    "city": "Singapore",
+    "summary": "Our first Singapore meetup — a hands-on Vibe Coding 101 night with Claude Code. No coding background required; bring a laptop and something you'd like to make. Date and venue coming soon.",
+    "featured": false,
+    "tags": [
+      "casual"
+    ],
+    "lumaUrl": "https://luma.com/lunatechs",
+    "lumaGraphic": "events/luma-claude-code-day.jpg",
+    "stats": []
+  }
+]

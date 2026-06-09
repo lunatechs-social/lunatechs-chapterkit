@@ -1,0 +1,56 @@
+name: chapter-ci
+# The bouncer: every change must pass scope-check + build + validate before it
+# can publish. Auto-deploys per-chapter on green push to main. A broken or
+# off-brand vibe-coded change fails here and never reaches the live site.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - name: Scope check (PRs only — one chapter, no core files)
+        if: github.event_name == 'pull_request'
+        run: bash scripts/scope-check.sh "origin/${{ github.base_ref }}"
+      - name: Build all chapters
+        run: node scripts/build.mjs
+      - name: Validate (no third-party resources, nav present, events schema)
+        run: node scripts/validate.mjs
+
+  deploy:
+    needs: check
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - run: node scripts/build.mjs
+      # ── deploy dist/<chapter>/ to the chapters origin (configure once) ──
+      # Chapters serve at lunatechs.social/<chapter>/* via a CloudFront behavior
+      # pointing at this bucket — fully separate from the main site bucket, so a
+      # chapter deploy can never touch the rest of the site.
+      - name: Deploy to S3 + invalidate
+        if: ${{ secrets.AWS_ROLE_ARN != '' }}
+        env:
+          BUCKET: ${{ secrets.CHAPTERS_BUCKET }}      # e.g. lunatechs-chapters-prod
+          DIST_ID: ${{ secrets.CLOUDFRONT_DIST_ID }}
+        run: |
+          aws s3 sync dist/ "s3://$BUCKET/" --delete --cache-control "max-age=300"
+          aws cloudfront create-invalidation --distribution-id "$DIST_ID" --paths "/*"
+      - name: Post-deploy health check (auto-rollback hook)
+        if: ${{ secrets.AWS_ROLE_ARN != '' }}
+        run: |
+          for ch in $(ls dist); do
+            code=$(curl -s -o /dev/null -w "%{http_code}" "https://lunatechs.social/$ch/")
+            echo "$ch -> $code"; [ "$code" = "200" ] || { echo "::error::$ch unhealthy"; exit 1; }
+          done
+      # On failure of the health check, a follow-up job / rollback.sh restores
+      # the previous dist (S3 versioning) — wired during infra setup.

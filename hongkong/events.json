@@ -1,0 +1,326 @@
+[
+  {
+    "slug": "2026-06-12-ai-video-creation",
+    "title": "AI Video Creation for Everyone (Lunatechs × Berkeley Club Hong Kong × OpenClaw Asia)",
+    "date": "2026-06-12T18:00:00+08:00",
+    "endTime": "21:00",
+    "location": "The Hive · Causeway Bay, Hong Kong",
+    "summary": "One night. Six creators. The AI video tools that used to need a studio — now on your laptop. Co-hosted with Berkeley Club Hong Kong and OpenClaw Asia at The Hive Causeway Bay.",
+    "featured": false,
+    "featuredPhoto": "brand/hive-cwb-booth-skyline.png",
+    "tags": [
+      "signature",
+      "co-hosted"
+    ],
+    "lumaUrl": "https://luma.com/6pyhrea0?utm_source=website-card",
+    "landingUrl": "events/2026-06-12-ai-video-creation/",
+    "lumaGraphic": "events/2026-06-12-ai-video-creation/banner-landscape.jpg?v=5",
+    "photo": "brand/hive-cwb-booth-skyline.png",
+    "recapUrl": "",
+    "stats": [],
+    "city": "Hong Kong"
+  },
+  {
+    "slug": "2026-05-30-deepseek-opencode",
+    "title": "AI Vibe Coding with DeepSeek × OpenCode",
+    "date": "2026-05-30T14:00:00+08:00",
+    "endTime": "16:00",
+    "location": "Drop By Dough, Central, Hong Kong",
+    "summary": "Our first session at new venue partner Drop By Dough — first-timers next to seasoned devs, vibe-coding with DeepSeek and OpenCode. Free tokens, starter guides for beginners, and working apps that didn't exist that morning.",
+    "featured": false,
+    "tags": [
+      "casual"
+    ],
+    "lumaUrl": "https://luma.com/3gi6w49u",
+    "lumaGraphic": "events/luma-deepseek-opencode.jpg",
+    "stats": [],
+    "featuredPhoto": "events/2026-05-30-deepseek-opencode/photos/group-hero.jpg",
+    "photo": "events/2026-05-30-deepseek-opencode/photos/group-hero.jpg",
+    "recapUrl": "events/2026-05-30-deepseek-opencode/",
+    "city": "Hong Kong"
+  },
+  {
+    "slug": "2026-05-14-ai-trading-workshop",
+    "title": "Lunatechs Workshop: AI & Trading",
+    "date": "2026-05-14T18:00:00+08:00",
+    "endTime": "21:00",
+    "location": "Compass Offices, Causeway Bay, Hong Kong",
+    "summary": "A great night of making new friends, reconnecting with old ones, and learning together how to use AI today to level up your stock trading workflow. Four superstar speakers brought down the house.",
+    "featured": true,
+    "featuredPhoto": "events/2026-05-14-ai-trading-workshop/photos/crowd-hero.jpg",
+    "tags": [
+      "signature"
+    ],
+    "lumaUrl": "https://luma.com/tw56oi8s",
+    "lumaGraphic": "events/luma-ai-trading.jpg",
+    "photo": "events/2026-05-14-ai-trading-workshop/photos/crowd-hero.jpg",
+    "recapUrl": "events/2026-05-14-ai-trading-workshop/",
+    "stats": [],
+    "city": "Hong Kong"
+  },
+  {
+    "slug": "2026-05-02-vibe-coding-101-website",
+    "title": "Boba and Tech: Vibe Coding 101 (Build Your Own Website)",
+    "date": "2026-05-02T15:00:00+08:00",
+    "endTime": "17:00",
+    "location": "Central Market, Hong Kong",
+    "summary": "Saturday afternoon at the Chatime courtyard — laptops out, Cursor open, builders shipping their first website from scratch. No engineering background required.",
+    "featured": false,
+    "tags": [
+      "casual"
+    ],
+    "lumaUrl": "https://luma.com/06i4ky2u",
+    "lumaGraphic": "events/luma-vibe-coding-101-website.jpg",
+    "photo": "events/2026-05-02-vibe-coding-101-website.jpg",
+    "stats": [],
+    "city": "Hong Kong"
+  },
+  {
+    "slug": "2026-04-23-vibe-coding-101",
+    "title": "Boba and Tech: Vibe Coding 101 (Build Your First App)",
+    "date": "2026-04-23T18:00:00+08:00",
+    "endTime": "20:00",
+    "location": "Central Market, Hong Kong",
+    "summary": "Casual drop-in Boba & Tech night at Central Market. Laptops out, Cursor open, first-time coders prompting their way to a working Note-Taking App. Co-hosted with The Berkeley Club of Hong Kong.",
+    "featured": false,
+    "tags": [
+      "co-hosted",
+      "casual"
+    ],
+    "lumaUrl": "https://luma.com/iiljz3vn",
+    "lumaGraphic": "events/luma-vibe-coding-101.jpg",
+    "photo": "events/2026-04-23-vibe-coding-101/photos/group-hero.jpg",
+    "recapUrl": "events/2026-04-23-vibe-coding-101/",
+    "stats": [
+      {
+        "value": "~40",
+        "label": "builders"
+      },
+      {
+        "value": "1",
+        "label": "note-taking app"
+      },
+      {
+        "value": "2",
+        "label": "communities"
+      }
+    ],
+    "city": "Hong Kong"
+  },
+  {
+    "slug": "2026-04-02-openclaw-ai-team",
+    "title": "OpenClaw LIVE: AI joins your TEAM!",
+    "date": "2026-04-02T18:00:00+08:00",
+    "endTime": "20:30",
+    "location": "Hong Kong Island (venue revealed on registration)",
+    "summary": "AI isn't just a tool anymore — it's a teammate. See how OpenClaw integrates into real team workflows, step into a live WhatsApp group chat with AI collaboration, and catch the debut of Vidiot, an AI video editing project.",
+    "featured": false,
+    "featuredPhoto": "events/2026-04-03-openclaw-joins-your-team/photos/audience-wide-back.jpg",
+    "tags": [
+      "signature"
+    ],
+    "lumaUrl": "https://luma.com/n80qyc1m",
+    "lumaGraphic": "events/luma-openclaw-ai-team.jpg",
+    "photo": "events/2026-04-03-openclaw-joins-your-team/photos/audience-wide-back.jpg",
+    "recapUrl": "events/2026-04-03-openclaw-joins-your-team/",
+    "stats": [],
+    "city": "Hong Kong"
+  },
+  {
+    "slug": "2026-03-28-claude-code-hangout",
+    "title": "Boba and Tech: Claude Code Community Day",
+    "date": "2026-03-28T13:00:00+08:00",
+    "endTime": "15:00",
+    "location": "Central Market",
+    "summary": "~40 builders took over Central Market for a casual Saturday of hacking and sharing projects. A 15-year-old showed up solo to demo his hackathon-winning game, and Mattin brought a chopstick-powered robot.",
+    "featured": false,
+    "tags": [
+      "casual"
+    ],
+    "lumaUrl": "https://luma.com/loy2t89b",
+    "lumaGraphic": "events/luma-claude-code-day.jpg",
+    "photo": "events/2026-03-28-claude-code-hangout/photos/crowd-waving.jpg",
+    "recapUrl": "events/2026-03-28-claude-code-hangout/",
+    "stats": [
+      {
+        "value": "~40",
+        "label": "builders"
+      },
+      {
+        "value": "1",
+        "label": "chopstick robot"
+      },
+      {
+        "value": "15yo",
+        "label": "youngest builder"
+      }
+    ],
+    "city": "Hong Kong"
+  },
+  {
+    "slug": "2026-03-26-openclaw-forum",
+    "title": "OpenClaw Forum HK: From AI Chat to AI Agent",
+    "date": "2026-03-26T15:00:00+08:00",
+    "endTime": "18:30",
+    "location": "Hong Kong Island (venue revealed on registration)",
+    "summary": "Small-scale forum exploring how AI is evolving from chat to agents that execute tasks and automate workflows. Co-hosted with OpenClaw Asia, sponsored by HashKey Exchange.",
+    "featured": false,
+    "tags": [
+      "co-hosted"
+    ],
+    "lumaUrl": "https://luma.com/krvagxun",
+    "lumaGraphic": "events/luma-openclaw-forum.jpg",
+    "photo": "events/openclaw-forum-hk.jpg",
+    "recapUrl": "events/2026-03-26-openclaw-forum/",
+    "stats": [
+      {
+        "value": "100+",
+        "label": "attendees"
+      },
+      {
+        "value": "5+",
+        "label": "speakers"
+      },
+      {
+        "value": "1",
+        "label": "panel"
+      }
+    ],
+    "city": "Hong Kong"
+  },
+  {
+    "slug": "2026-03-19-boba-tech-setup",
+    "title": "Boba & Tech: FREE OpenClaw Setup",
+    "date": "2026-03-19T18:00:00+08:00",
+    "endTime": "20:00",
+    "location": "Central Market",
+    "summary": "Casual setup session at Central Market. Attendees got OpenClaw installed on their laptops with one-on-one help from Hanley and Jason.",
+    "featured": false,
+    "tags": [
+      "casual"
+    ],
+    "lumaUrl": "https://luma.com/wqett25z",
+    "lumaGraphic": "events/boba-tech-setup.jpg",
+    "photo": "events/2026-03-19-boba-tech-setup/photos/group-photo.jpg",
+    "stats": [],
+    "city": "Hong Kong"
+  },
+  {
+    "slug": "2026-03-15-tech-and-hike",
+    "title": "Tech and Hike: Golden Hour at Victoria Peak",
+    "date": "2026-03-15T16:00:00+08:00",
+    "endTime": "18:30",
+    "location": "Victoria Peak (HKU Station)",
+    "summary": "Builders, founders, and tech lovers hiked to Victoria Peak for golden hour. A beginner-friendly 60-minute hike balancing mind, body, and soul.",
+    "featured": false,
+    "tags": [
+      "activity"
+    ],
+    "lumaUrl": "https://luma.com/p263pzlj",
+    "lumaGraphic": "events/luma-hike.jpg",
+    "photo": "events/tech-and-hike-peak.jpg",
+    "stats": [],
+    "city": "Hong Kong"
+  },
+  {
+    "slug": "2026-03-12-openclaw-live-demo",
+    "title": "OpenClaw LIVE DEMO — Life on Easy Mode",
+    "date": "2026-03-12T18:30:00+08:00",
+    "endTime": "21:00",
+    "location": "Compass Offices",
+    "summary": "100 people packed Compass offices for 4 live OpenClaw demos. Co-hosted with Berkeley Club Hong Kong. Jollibee chicken, 3 lucky draws, and standing room only.",
+    "featured": false,
+    "tags": [
+      "signature"
+    ],
+    "lumaUrl": "https://luma.com/0j36kmm5",
+    "lumaGraphic": "events/luma-live-demo.jpg",
+    "photo": "events/2026-03-12-openclaw-live-demo/photos/crowd-panorama.jpg",
+    "recapUrl": "events/2026-03-12-openclaw-live-demo/",
+    "stats": [
+      {
+        "value": "100",
+        "label": "checked in"
+      },
+      {
+        "value": "4",
+        "label": "live demos"
+      },
+      {
+        "value": "3",
+        "label": "lucky draws"
+      }
+    ],
+    "city": "Hong Kong"
+  },
+  {
+    "slug": "2026-03-07-boba-and-tech",
+    "title": "Boba and Tech: Great Presentations",
+    "date": "2026-03-07T14:00:00+08:00",
+    "endTime": "16:00",
+    "location": "Central Market (ChaTime courtyard)",
+    "summary": "Learning how to make great presentations with and without AI. Casual hangout at Central Market over boba.",
+    "featured": false,
+    "tags": [
+      "casual"
+    ],
+    "lumaUrl": "https://luma.com/lunatechs",
+    "lumaGraphic": "events/luma-boba-tech.jpg",
+    "photo": "events/boba-and-tech-group.jpg",
+    "stats": [],
+    "city": "Hong Kong"
+  },
+  {
+    "slug": "2026-03-02-claw-bites",
+    "title": "CLAW BITES — Beginner Friendly OpenClaw Workshop",
+    "date": "2026-03-02T18:00:00+08:00",
+    "endTime": "21:00",
+    "location": "Central Market",
+    "summary": "35 people showed up in the rain to learn OpenClaw hands-on. Two talks, a battle-royale lucky draw, and guest influencers with 700K+ combined following.",
+    "featured": false,
+    "tags": [
+      "signature"
+    ],
+    "lumaUrl": "https://luma.com/qecpp85w",
+    "lumaGraphic": "events/luma-claw-bites.jpg",
+    "photo": "events/2026-03-02-claw-bites/photos/meetup2-9-converted.jpg",
+    "recapUrl": "events/2026-03-02-claw-bites/",
+    "stats": [
+      {
+        "value": "35",
+        "label": "attendees"
+      },
+      {
+        "value": "2",
+        "label": "speakers"
+      },
+      {
+        "value": "2",
+        "label": "guest influencers"
+      }
+    ],
+    "city": "Hong Kong"
+  },
+  {
+    "slug": "2026-02-21-openclaw-office-hours",
+    "title": "OpenClaw Office Hours — The First Meetup",
+    "date": "2026-02-21T14:00:00+08:00",
+    "endTime": "16:00",
+    "location": "Central Market",
+    "summary": "Where it all started. An informal hangout at Central Market — talk tech, AI, or anything. Hanley and Jason helped people get hands-on with OpenClaw.",
+    "featured": false,
+    "tags": [
+      "casual"
+    ],
+    "lumaUrl": "https://luma.com/lunatechs",
+    "lumaGraphic": "events/luma-meetup1.jpg",
+    "photo": "events/meetup1-group.jpg",
+    "stats": [
+      {
+        "value": "15+",
+        "label": "attendees"
+      }
+    ],
+    "city": "Hong Kong"
+  }
+]
