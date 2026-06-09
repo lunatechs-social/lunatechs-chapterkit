@@ -1,0 +1,61 @@
+name: assemble
+# Reusable workflow: a chapter content repo calls this to build itself against the
+# kit, validate, and deploy to its subdomain. Centralizes the build so every chapter
+# stays consistent and guarded — a chapter can only ever publish its own folder.
+#
+# Called from a chapter repo's .github/workflows/deploy.yml:
+#   jobs:
+#     ship:
+#       uses: lunatechs-social/lunatechs-chapterkit/.github/workflows/assemble.yml@main
+#       with:  { slug: singapore }
+#       secrets: inherit
+on:
+  workflow_call:
+    inputs:
+      slug:
+        description: chapter slug (its folder + subdomain prefix)
+        required: true
+        type: string
+    secrets:
+      KIT_READ_TOKEN:    { required: false }   # PAT that can read the (private) kit
+      AWS_ROLE_ARN:      { required: false }
+      CHAPTER_BUCKET:    { required: false }
+      CLOUDFRONT_DIST_ID:{ required: false }
+
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout chapter content
+        uses: actions/checkout@v4
+        with: { path: content }
+      - name: Checkout the chapter kit
+        uses: actions/checkout@v4
+        with:
+          repository: lunatechs-social/lunatechs-chapterkit
+          token: ${{ secrets.KIT_READ_TOKEN || github.token }}
+          path: kit
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - name: Assemble (drop content into the kit) + build + validate
+        run: |
+          mkdir -p "kit/${{ inputs.slug }}"
+          rsync -a --exclude '.git' --exclude '.github' --exclude '.chapterkit' content/ "kit/${{ inputs.slug }}/"
+          cd kit
+          node scripts/build.mjs
+          node scripts/validate.mjs
+          echo "Built dist/${{ inputs.slug }}"
+      # ── deploy: only runs once subdomain hosting + secrets are configured ──
+      - name: Deploy to S3 + invalidate
+        if: ${{ secrets.AWS_ROLE_ARN != '' }}
+        env:
+          BUCKET:  ${{ secrets.CHAPTER_BUCKET }}
+          DIST_ID: ${{ secrets.CLOUDFRONT_DIST_ID }}
+        run: |
+          aws s3 sync "kit/dist/${{ inputs.slug }}/" "s3://$BUCKET/" --delete --cache-control "max-age=300"
+          aws cloudfront create-invalidation --distribution-id "$DIST_ID" --paths "/*"
+      - name: Health check
+        if: ${{ secrets.AWS_ROLE_ARN != '' }}
+        run: |
+          code=$(curl -s -o /dev/null -w "%{http_code}" "https://${{ inputs.slug }}.lunatechs.social/")
+          echo "${{ inputs.slug }} -> $code"; [ "$code" = "200" ] || { echo "::error::unhealthy"; exit 1; }

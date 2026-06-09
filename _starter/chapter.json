@@ -1,0 +1,6 @@
+{
+  "slug": "{{SLUG}}",
+  "city": "{{CITY}}",
+  "subdomain": "{{SLUG}}.lunatechs.social",
+  "status": "forming"
+}

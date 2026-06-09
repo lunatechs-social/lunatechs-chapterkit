@@ -1,0 +1,28 @@
+name: kit-ci
+# Smoke-test the kit itself: the starter template must build + pass validation,
+# so a change to the shared shell / build / validator can't ship broken.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - name: Materialize the starter as a throwaway chapter
+        run: |
+          cp -r _starter smoketest
+          sed -i \
+            -e 's/{{CITY}}/Testville/g' \
+            -e 's/{{TAGLINE}}/A test chapter./g' \
+            -e 's#{{JOIN_URL}}#https://luma.com/lunatechs#g' \
+            -e 's/{{SLUG}}/smoketest/g' \
+            smoketest/index.html smoketest/chapter.json
+      - name: Build + validate
+        run: |
+          node scripts/build.mjs
+          node scripts/validate.mjs

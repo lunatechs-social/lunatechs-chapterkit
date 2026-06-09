@@ -1,45 +1,37 @@
-# LunaTechs Chapters — vibe-coding rules
+# Lunatechs Chapter Kit — core maintainer notes
 
-This repo holds **chapter pages + event lists**. You (a chapter owner) edit
-**your own chapter** here with AI — full creative freedom inside the rails
-below. A CI gate builds and checks every change; anything broken or off-brand
-simply doesn't publish, so you can experiment freely.
+This is the **kit**, not a chapter. It holds the shared shell + build + guardrails
+that wrap each chapter's content. Chapters live in their **own** repos
+(`lunatechs-chapter-<slug>`), seeded from `_starter/` and assembled against this kit
+at build time. Editing here changes every chapter — treat `shared/`, `scripts/`, and
+`_starter/` as the contract.
 
-## What you may edit
-- **`<your-chapter>/`** only — e.g. `hongkong/`: `index.html`, `events.json`,
-  `assets/`, and your chapter's `CLAUDE.md`.
+See `README.md` for the full layout. Quick map:
+- `shared/` — nav, footer, event cards (+ List/Grid past toggle), the "Lunatics,
+  worldwide" module, and `cities.json` (the global registry the module reads).
+- `scripts/build.mjs` — inlines the shared includes into each chapter folder → `dist/<slug>/`.
+- `scripts/validate.mjs` — the CI gate (no third-party resources; nav present; the
+  `#events`/`#about`/`#connect` anchors exist; events.json schema; no nested-comment leaks).
+- `_starter/` — the template a new chapter copies (`index.html`, `events.json`,
+  `photos.json`, `chapter.json`, `dev.sh`, `CLAUDE.md`).
+- `.github/workflows/kit-ci.yml` — smoke-tests the starter on every change to the kit.
+- `.github/workflows/assemble.yml` — reusable workflow chapters call to build+validate+deploy.
 
-## What is OFF-LIMITS (CI will reject changes here)
-- `shared/` (the navbar + brand — core team owns it so every page matches)
-- `scripts/`, `.github/`, root `CLAUDE.md` / `README.md`
-- **any other chapter's folder.** One chapter per change.
+## Rules that flow down to every chapter (validate.mjs enforces)
+1. **No third-party resources** (no Google Fonts / CDN scripts) — fonts are first-party.
+2. Keep the three shared includes (`nav.html`, `events.html`, `global.html`) and the
+   `#events` / `#about` / `#connect` section ids.
+3. `<body data-city="…">` names the chapter in the nav chip + worldwide module.
+4. **Brand voice = punchy and grounded**, never cinematic. No moon/lunar imagery
+   (use ⚡ or the mascot). No country-flag emojis on cities. Brand name in prose is
+   **Lunatechs** (title case); the logo wordmark is lowercase.
 
-## House rules (CI enforces these — break one and it won't ship)
-1. **No third-party resources.** No Google Fonts links, no CDN `<script>`s, no
-   external `<link>`/`<script src="https://…">`. Use the site's self-hosted
-   fonts: `<link rel="stylesheet" href="/assets/fonts/fonts.css">`. (Loading
-   third-party stuff trips iOS Safari's privacy banner.)
-2. **Keep the shared navbar.** Leave the line
-   `<!--#include virtual="/shared/nav.html" -->` near the top of `<body>`;
-   the build inlines the common nav so your page matches the rest of the site.
-3. **Brand voice = punchy and grounded**, never dramatic/cinematic. We're a
-   *tech enthusiast community*, not a "builder community" or "tech community".
-   No moon/lunar imagery (use ⚡ or the mascot). No country-flag emojis on cities.
-4. **Events live in `events.json`** — an array; each event needs at least
-   `title` and `date` (ISO, e.g. `2026-07-10T18:30:00+08:00`). The page renders
-   from this file. Keep it accurate.
-5. Reference shared brand art by absolute URL (`/brand/…`) and fonts via
-   `/assets/fonts/fonts.css` — the main site serves those on the same domain.
-
-## Publish
-Push your change → CI builds + checks it → if green it **auto-publishes** to
-`lunatechs.social/<your-chapter>/`. If red, nothing changes and CI tells you
-what to fix. Every change is in git history, so anything can be reverted in
-one step.
-
-## Test locally before pushing
+## Test locally
 ```bash
-node scripts/build.mjs      # renders dist/<chapter>/
-node scripts/validate.mjs   # the same checks CI runs
-open dist/<your-chapter>/index.html
+cp -r _starter smoketest && node scripts/build.mjs && node scripts/validate.mjs
 ```
+
+## Start a new chapter
+Copy `_starter/` into a new `lunatechs-chapter-<slug>` repo, fill the `{{…}}`
+placeholders, push, add the founder as a collaborator, and add the city to
+`shared/cities.json`.
