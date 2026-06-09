@@ -9,11 +9,13 @@ const ROOT = process.cwd();
 const DIST = path.join(ROOT, 'dist');
 const SKIP = new Set(['scripts', 'shared', 'dist', 'node_modules', '.git', '.github']);
 const nav = fs.readFileSync(path.join(ROOT, 'shared', 'nav.html'), 'utf8');
+const footer = fs.readFileSync(path.join(ROOT, 'shared', 'footer.html'), 'utf8');
 
 function chapters() {
   return fs.readdirSync(ROOT).filter((d) => {
     const p = path.join(ROOT, d);
-    return fs.statSync(p).isDirectory() && !d.startsWith('.') && !SKIP.has(d);
+    // skip hidden + helpers + `_`-prefixed template dirs (e.g. _starter)
+    return fs.statSync(p).isDirectory() && !d.startsWith('.') && !d.startsWith('_') && !SKIP.has(d);
   });
 }
 
@@ -35,8 +37,9 @@ for (const ch of list) {
   const idx = path.join(out, 'index.html');
   if (fs.existsSync(idx)) {
     let html = fs.readFileSync(idx, 'utf8');
-    // inline the shared nav (SSI-style include) so chapters share one navbar
+    // inline the shared nav + footer (SSI-style includes) — the global shell
     html = html.replace(/<!--#include virtual="\/?(shared\/)?nav\.html"\s*-->/g, nav);
+    html = html.replace(/<!--#include virtual="\/?(shared\/)?footer\.html"\s*-->/g, footer);
     fs.writeFileSync(idx, html);
   }
 }

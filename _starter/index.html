@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LunaTechs {{CITY}} — chapter</title>
+  <meta name="description" content="LunaTechs {{CITY}} — find your fellow tech lunatics." />
+  <!-- Self-hosted fonts from the main site (allowed). NEVER add Google Fonts / CDN scripts. -->
+  <link rel="stylesheet" href="/assets/fonts/fonts.css" />
+  <style>
+    :root{--bg:#06080f;--surface:#0c1120;--border:rgba(56,189,248,.14);--border-bright:rgba(56,189,248,.28);
+      --text:#f0f6ff;--text-secondary:#94a3b8;--text-dim:#64748b;--cyan:#22d3ee;--blue:#3b82f6;--gold:#fbbf24}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+    a{color:var(--cyan)}
+    .container{max-width:960px;margin:0 auto;padding:0 24px}
+    .section{padding:56px 0}
+    .section-label{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--cyan);display:block;margin-bottom:12px}
+    .section-title{font-size:clamp(26px,5vw,38px);font-weight:800;line-height:1.15;margin-bottom:14px}
+    /* hero — make this yours */
+    .hero{min-height:62vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:90px 24px 48px;
+      background:radial-gradient(60% 70% at 50% 0%,rgba(34,211,238,.10),transparent),var(--bg)}
+    .hero h1{font-size:clamp(40px,9vw,76px);font-weight:900;line-height:1}
+    .hero .tagline{color:#cfe0f5;font-size:clamp(16px,2.4vw,20px);margin:18px auto 28px;max-width:560px}
+    .cta-row{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 26px;border-radius:12px;font-weight:600;font-size:15px;text-decoration:none;cursor:pointer;border:none}
+    .btn-primary{background:linear-gradient(135deg,var(--cyan),var(--blue));color:#000}
+    .btn-ghost{background:transparent;color:var(--cyan);border:1px solid var(--border-bright)}
+    /* events (renders from events.json — the contract) */
+    .evt-grid{display:grid;gap:18px;margin-top:8px}
+    .evt{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:22px 24px}
+    .evt-date{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--gold);font-weight:700;letter-spacing:1px;margin-bottom:6px}
+    .evt h3{font-size:20px;font-weight:800;margin-bottom:6px}
+    .evt p{color:var(--text-secondary);font-size:14.5px}
+    .evt a{font-weight:600}
+    .empty{color:var(--text-secondary);background:var(--surface);border:1px dashed var(--border-bright);border-radius:14px;padding:24px}
+    /* photos (renders from photos.json — a FREEFORM file, any shape you like) */
+    .photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:8px}
+    .photo-grid img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;border:1px solid var(--border)}
+  </style>
+</head>
+<body data-page="chapter">
+  <!--#include virtual="/shared/nav.html" -->
+
+  <!-- ───────── HERO — this is YOURS. Rewrite it, restyle it, go wild. ───────── -->
+  <header class="hero">
+    <div>
+      <h1>LunaTechs {{CITY}}</h1>
+      <p class="tagline">{{TAGLINE}}</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="{{JOIN_URL}}">Join the community →</a>
+        <a class="btn btn-ghost" href="#events">See events</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ───────── EVENTS — rendered from events.json (keep this file + its format) ───────── -->
+  <section class="section" id="events">
+    <div class="container">
+      <span class="section-label">Upcoming</span>
+      <h2 class="section-title">Events</h2>
+      <div class="evt-grid" id="upcoming"></div>
+      <span class="section-label" style="margin-top:40px">Past</span>
+      <div class="evt-grid" id="past"></div>
+    </div>
+  </section>
+
+  <!-- ───────── PHOTOS — rendered from photos.json (a freeform "database" — any shape) ───────── -->
+  <section class="section" id="photos">
+    <div class="container">
+      <span class="section-label">Moments</span>
+      <h2 class="section-title">Photos</h2>
+      <div class="photo-grid" id="gallery"></div>
+    </div>
+  </section>
+
+  <!--#include virtual="/shared/footer.html" -->
+
+  <script>
+    const fmtDate = d => { const m=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; const x=new Date(d); return `${m[x.getMonth()]} ${x.getDate()}, ${x.getFullYear()}`; };
+    // EVENTS — from the contracted events.json (array of {title, date, ...})
+    fetch('events.json').then(r=>r.json()).then(events=>{
+      const now=new Date();
+      const up=events.filter(e=>new Date(e.date)>now).sort((a,b)=>new Date(a.date)-new Date(b.date));
+      const past=events.filter(e=>new Date(e.date)<=now).sort((a,b)=>new Date(b.date)-new Date(a.date));
+      const card=e=>`<div class="evt"><div class="evt-date">${fmtDate(e.date)}${e.location?' · '+e.location:''}</div>
+        <h3>${e.title}</h3>${e.summary?`<p>${e.summary}</p>`:''}${e.rsvpUrl?`<p><a href="${e.rsvpUrl}">RSVP →</a></p>`:''}</div>`;
+      document.getElementById('upcoming').innerHTML = up.length ? up.map(card).join('')
+        : `<div class="empty">Next one's brewing — check back soon.</div>`;
+      document.getElementById('past').innerHTML = past.map(card).join('');
+    }).catch(()=>{ document.getElementById('upcoming').innerHTML='<div class="empty">events.json not found.</div>'; });
+
+    // PHOTOS — from a freeform photos.json (here: an array of {src, caption}) — make it any shape you want
+    fetch('photos.json').then(r=>r.json()).then(photos=>{
+      document.getElementById('gallery').innerHTML = photos.map(p=>`<img src="${p.src}" alt="${p.caption||''}" loading="lazy">`).join('');
+    }).catch(()=>{});
+  </script>
+</body>
+</html>

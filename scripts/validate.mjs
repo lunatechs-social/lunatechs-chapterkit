@@ -18,7 +18,8 @@ function validateChapter(ch) {
   const html = fs.readFileSync(idx, 'utf8');
 
   if (!/<title>[^<]+<\/title>/i.test(html)) err(ch, 'missing <title>');
-  if (!html.includes('site-header')) err(ch, 'missing shared nav (site-header) — keep the nav include');
+  if (!html.includes('site-header')) err(ch, 'missing shared nav — keep the <!--#include …/nav.html--> line');
+  if (!html.includes('lt-footer')) err(ch, 'missing shared footer — keep the <!--#include …/footer.html--> line');
   // no third-party loaded resources (scripts/fonts/styles)
   for (const h of BANNED_HOSTS) if (html.includes(h)) err(ch, `third-party resource not allowed: ${h} (self-host instead)`);
   // catch <script src="http…external"> / <link href="http…external">
