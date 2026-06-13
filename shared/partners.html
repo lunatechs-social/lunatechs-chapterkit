@@ -20,15 +20,20 @@
   </div>
 </section>
 <style>
-  .partners-section .partners-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin-top:30px}
-  .partners-section .partner-logo-card{flex:0 1 220px;min-height:128px;display:flex;align-items:center;justify-content:center;padding:24px 26px;background:rgba(17,24,39,.32);border:1px solid var(--border,rgba(56,189,248,.14));border-radius:16px;transition:background .2s ease,border-color .2s ease;text-decoration:none}
-  .partners-section .partner-logo-card:hover{background:rgba(26,34,54,.6)}
-  .partners-section .partner-logo-card img{display:block;width:100%;max-width:200px;max-height:84px;object-fit:contain}
-  .partners-section .partner-logo-card.is-square img{max-width:118px;max-height:118px;border-radius:12px}
+  /* Connected logo grid — matches the global site: one bordered box, internal
+     hairlines (drawn by the 1px gap showing the grid's background), big logos,
+     tall cells. Column count + any ragged-row fillers are set by JS so it stays
+     a clean rectangle at ANY partner count (1, 6, or 7). */
+  .partners-section .partners-grid{display:grid;gap:1px;margin:30px auto 0;background:var(--border,rgba(56,189,248,.14));border:1px solid var(--border,rgba(56,189,248,.14));border-radius:18px;overflow:hidden}
+  .partners-section .partner-logo-card{min-height:170px;padding:30px 28px;display:flex;align-items:center;justify-content:center;background:#0c1322;transition:background .2s ease;text-decoration:none}
+  .partners-section .partner-logo-card:not(.is-filler):hover{background:#141d30}
+  .partners-section .partner-logo-card img{display:block;width:100%;max-width:240px;max-height:108px;object-fit:contain}
+  .partners-section .partner-logo-card.is-square img{max-width:128px;max-height:128px;border-radius:12px}
   /* dark logos (e.g. university wordmarks) on a white chip so they read */
-  .partners-section .partner-logo-card.is-light{background:#fff;border-color:rgba(255,255,255,.22)}
+  .partners-section .partner-logo-card.is-light{background:#fff}
   .partners-section .partner-logo-card.is-light:hover{background:#f3f4f6}
-  @media (max-width:600px){ .partners-section .partner-logo-card{flex:1 1 140px;min-height:104px;padding:18px} }
+  .partners-section .partner-logo-card.is-filler{pointer-events:none}
+  @media (max-width:560px){ .partners-section .partner-logo-card{min-height:120px;padding:18px} .partners-section .partner-logo-card img{max-height:64px} }
 </style>
 <script>
   (async function () {
@@ -42,7 +47,7 @@
       var data = await res.json();
       var items = (data.items || []).filter(function (p) { return p && p.logo; });
       if (!items.length) return;                // empty -> stay hidden
-      grid.innerHTML = items.map(function (p) {
+      var html = items.map(function (p) {
         var cls = 'partner-logo-card' + (p.square ? ' is-square' : '') + (p.light ? ' is-light' : '');
         var src = p.logo.charAt(0) === '/' ? p.logo : '/' + p.logo;
         var img = '<img src="' + esc(src) + '" alt="' + esc(p.name) + '" loading="lazy">';
@@ -50,6 +55,15 @@
           ? '<a class="' + cls + '" href="' + esc(p.url) + '" target="_blank" rel="noopener" aria-label="' + esc(p.name) + '">' + img + '</a>'
           : '<div class="' + cls + '">' + img + '</div>';
       }).join('');
+      // pick columns that fill cleanly, then pad the last row with invisible
+      // filler tiles so the connected box is always a perfect rectangle.
+      var n = items.length;
+      var cols = n <= 3 ? n : (n === 4 ? 2 : 3);
+      var blanks = (cols - (n % cols || cols)) % cols;
+      for (var i = 0; i < blanks; i++) html += '<div class="partner-logo-card is-filler" aria-hidden="true"></div>';
+      grid.innerHTML = html;
+      grid.style.gridTemplateColumns = 'repeat(' + cols + ', minmax(0, 1fr))';
+      grid.style.maxWidth = (cols * 300) + 'px';
       sec.hidden = false;
     } catch (e) { /* stay hidden on error */ }
   })();
