@@ -12,6 +12,7 @@ const nav = fs.readFileSync(path.join(ROOT, 'shared', 'nav.html'), 'utf8');
 const footer = fs.readFileSync(path.join(ROOT, 'shared', 'footer.html'), 'utf8');
 const events = fs.readFileSync(path.join(ROOT, 'shared', 'events.html'), 'utf8');
 const partners = fs.readFileSync(path.join(ROOT, 'shared', 'partners.html'), 'utf8');
+const linksPage = fs.readFileSync(path.join(ROOT, 'shared', 'links.page.html'), 'utf8');
 // global module + its city list (core-owned). Inject the cities JSON at build
 // time so each chapter ships the data inline (no cross-origin fetch / missing file).
 const cities = fs.readFileSync(path.join(ROOT, 'shared', 'cities.json'), 'utf8').trim();
@@ -63,5 +64,18 @@ for (const ch of list) {
   const out = path.join(DIST, ch);
   copyDir(path.join(ROOT, ch), out);
   inlineAll(out); // every .html in the chapter, not just index.html
+
+  // generate this chapter's /links/ linktree from the shared template, injecting
+  // its chapter.json (city + local links). Shared brand links live in the template.
+  try {
+    const chJson = fs.readFileSync(path.join(ROOT, ch, 'chapter.json'), 'utf8').trim();
+    const linksDir = path.join(out, 'links');
+    fs.mkdirSync(linksDir, { recursive: true });
+    const linksOut = path.join(linksDir, 'index.html');
+    fs.writeFileSync(linksOut, linksPage.replace('"__CHAPTER__"', chJson));
+    inlineShared(linksOut); // pull in the shared footer
+  } catch (e) {
+    console.warn(`  (${ch}: no chapter.json — skipped /links/)`);
+  }
 }
 console.log(`✓ built ${list.length} chapters → dist/ : ${list.join(', ')}`);
