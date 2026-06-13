@@ -26,8 +26,10 @@
   .site-header-nav a:hover{color:var(--cyan,#22d3ee)}
   .site-header-nav a{display:inline-flex;align-items:center;gap:4px}
   .site-header-nav .nav-label{white-space:nowrap}
-  /* city chip next to the wordmark */
-  .nav-city{display:none;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold,#fbbf24);line-height:1.4}
+  /* city chip next to the wordmark. word-spacing pulls the monospace inter-word
+     gap back in so two-word cities (Hong Kong, Los Angeles) don't read with a
+     jarring space; single-word cities (Singapore) are unaffected. */
+  .nav-city{display:none;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;letter-spacing:.04em;word-spacing:-.28em;text-transform:uppercase;color:var(--gold,#fbbf24);line-height:1.4}
   .nav-city.show{display:inline-block}
   /* the one outbound link — set apart with a divider + dimmer treatment */
   .site-header-nav .nav-global{margin-left:6px;padding-left:16px;border-left:1px solid var(--border,rgba(56,189,248,.14));color:var(--text-dim,#64748b)}
