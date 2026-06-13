@@ -11,6 +11,7 @@ const SKIP = new Set(['scripts', 'shared', 'dist', 'node_modules', '.git', '.git
 const nav = fs.readFileSync(path.join(ROOT, 'shared', 'nav.html'), 'utf8');
 const footer = fs.readFileSync(path.join(ROOT, 'shared', 'footer.html'), 'utf8');
 const events = fs.readFileSync(path.join(ROOT, 'shared', 'events.html'), 'utf8');
+const partners = fs.readFileSync(path.join(ROOT, 'shared', 'partners.html'), 'utf8');
 // global module + its city list (core-owned). Inject the cities JSON at build
 // time so each chapter ships the data inline (no cross-origin fetch / missing file).
 const cities = fs.readFileSync(path.join(ROOT, 'shared', 'cities.json'), 'utf8').trim();
@@ -44,6 +45,7 @@ function inlineShared(file) {
   html = html.replace(/<!--#include virtual="\/?(shared\/)?nav\.html"\s*-->/g, nav);
   html = html.replace(/<!--#include virtual="\/?(shared\/)?footer\.html"\s*-->/g, footer);
   html = html.replace(/<!--#include virtual="\/?(shared\/)?events\.html"\s*-->/g, events);
+  html = html.replace(/<!--#include virtual="\/?(shared\/)?partners\.html"\s*-->/g, partners);
   html = html.replace(/<!--#include virtual="\/?(shared\/)?global\.html"\s*-->/g, global);
   fs.writeFileSync(file, html);
 }

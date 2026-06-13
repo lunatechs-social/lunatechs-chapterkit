@@ -1,0 +1,56 @@
+<!-- Shared PARTNERS module — core-team owned; the build inlines it. Renders THIS
+     chapter's own partners from /partners.json (each chapter ships its own list +
+     its logo files under /partners/). Self-hides when partners.json is missing or
+     empty, so a chapter with no partners yet shows nothing.
+     partners.json shape:
+       { "items": [
+           { "name": "The Hive", "logo": "partners/the-hive.png",
+             "url": "https://thehive.com", "square": false, "light": false }
+       ] }
+     - logo: path relative to the chapter root (served from /partners/, NOT /assets/
+       which falls back to the global site).
+     - square: true for ~1:1 marks (renders a smaller, rounded tile).
+     - light: true for dark logos that need a white chip to read on the dark page. -->
+<section class="section partners-section" id="partners" hidden>
+  <div class="container">
+    <span class="section-label">Partners</span>
+    <h2 class="section-title">Partners We&rsquo;ve Worked With</h2>
+    <p class="section-desc">Venues, sponsors and co-hosts who help make this chapter real.</p>
+    <div class="partners-grid" aria-label="Partner logos"></div>
+  </div>
+</section>
+<style>
+  .partners-section .partners-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin-top:30px}
+  .partners-section .partner-logo-card{flex:0 1 220px;min-height:128px;display:flex;align-items:center;justify-content:center;padding:24px 26px;background:rgba(17,24,39,.32);border:1px solid var(--border,rgba(56,189,248,.14));border-radius:16px;transition:background .2s ease,border-color .2s ease;text-decoration:none}
+  .partners-section .partner-logo-card:hover{background:rgba(26,34,54,.6)}
+  .partners-section .partner-logo-card img{display:block;width:100%;max-width:200px;max-height:84px;object-fit:contain}
+  .partners-section .partner-logo-card.is-square img{max-width:118px;max-height:118px;border-radius:12px}
+  /* dark logos (e.g. university wordmarks) on a white chip so they read */
+  .partners-section .partner-logo-card.is-light{background:#fff;border-color:rgba(255,255,255,.22)}
+  .partners-section .partner-logo-card.is-light:hover{background:#f3f4f6}
+  @media (max-width:600px){ .partners-section .partner-logo-card{flex:1 1 140px;min-height:104px;padding:18px} }
+</style>
+<script>
+  (async function () {
+    var sec = document.getElementById('partners');
+    if (!sec) return;
+    var grid = sec.querySelector('.partners-grid');
+    function esc(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]; }); }
+    try {
+      var res = await fetch('/partners.json', { cache: 'no-cache' });
+      if (!res.ok) return;                      // no partners file -> stay hidden
+      var data = await res.json();
+      var items = (data.items || []).filter(function (p) { return p && p.logo; });
+      if (!items.length) return;                // empty -> stay hidden
+      grid.innerHTML = items.map(function (p) {
+        var cls = 'partner-logo-card' + (p.square ? ' is-square' : '') + (p.light ? ' is-light' : '');
+        var src = p.logo.charAt(0) === '/' ? p.logo : '/' + p.logo;
+        var img = '<img src="' + esc(src) + '" alt="' + esc(p.name) + '" loading="lazy">';
+        return p.url
+          ? '<a class="' + cls + '" href="' + esc(p.url) + '" target="_blank" rel="noopener" aria-label="' + esc(p.name) + '">' + img + '</a>'
+          : '<div class="' + cls + '">' + img + '</div>';
+      }).join('');
+      sec.hidden = false;
+    } catch (e) { /* stay hidden on error */ }
+  })();
+</script>
