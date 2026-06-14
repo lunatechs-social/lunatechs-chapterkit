@@ -187,9 +187,10 @@
           const n=allEvents.filter(e=>e&&e.published===false).length;
           if(n>0){
             const btn=document.getElementById('lt-drafts-toggle');
-            let showing=false;
+            let showing=false; try{showing=localStorage.getItem('lt-show-drafts')==='1';}catch(e){}
             const paint=()=>{ btn.textContent=showing?('● Showing '+n+' draft'+(n>1?'s':'')):('Show '+n+' unpublished'); btn.classList.toggle('on',showing); };
-            window.ltToggleDrafts=function(){ showing=!showing; render(showing?allEvents:publicEvents); paint(); };
+            window.ltToggleDrafts=function(){ showing=!showing; try{localStorage.setItem('lt-show-drafts',showing?'1':'0');}catch(e){} render(showing?allEvents:publicEvents); paint(); };
+            if(showing) render(allEvents); // restore persisted "show drafts" preference (shared with the global /events page)
             paint(); btn.style.display='inline-flex';
           }
         }
