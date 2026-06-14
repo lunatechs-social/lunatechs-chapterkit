@@ -50,3 +50,24 @@ Push to `main` → GitHub webhook → the LunaTechs **Lightsail** server runs
 `deploy-chapter.sh <slug>` (git reset → build through the kit → publish to nginx at
 `<subdomain>`). Same box/nginx as the global site, fronted by a CDN. **Not S3, no
 GitHub Actions.** Preview first with `./dev.sh`. Full playbook: **`DEPLOY.md`**.
+
+## Drafts (`published: false`)
+
+An event in `events.json` with `"published": false` is a **draft**: the build splits the
+feed so the shipped `events.json` is **published-only** (public sees nothing), while the
+full list (incl. drafts) is written to a **gated** `_drafts/events.json` that nginx serves
+only to a logged-in organizer/leader of this chapter (or an admin). The event's
+`events/<slug>/` page still ships publicly. Flip to `published: true` to announce.
+
+- **Don't** filter drafts in client JS off the public `events.json` — they'd leak in the
+  raw file. The split happens at build time (kit `build.mjs`) and in the server's
+  `gen-global-events.mjs`; both keep drafts out of anything public.
+- The shared `events.html` include renders a **"Show unpublished"** toggle + DRAFT badge
+  for cleared users (it fetches `_drafts/events.json`; a 200 means the server cleared
+  them). This starter uses `<!--#include virtual="/shared/events.html" -->`, so the
+  toggle works out of the box — if you replace it with a **custom** events section, copy
+  the cookie-check + `_drafts/events.json` fetch snippet across, or the homepage toggle
+  is lost (it still works on the global `lunatechs.social/events` page).
+- Identity comes from the `lt_id` cookie set by `app.lunatechs.social` on `.lunatechs.social`;
+  draft visibility is scoped by per-chapter membership (admin / leader / organizer). See
+  the kit's `ops/PHASE3-RUNBOOK.md` for the gating internals.

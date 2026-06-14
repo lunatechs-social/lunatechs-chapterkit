@@ -186,3 +186,39 @@ URL. `city`, `status`, and `links` are yours to edit.
 
 Brand name in prose is **LunaTechs**; the logo wordmark is lowercase. Punchy and
 grounded, no moon/lunar imagery (use ⚡ or the mascot).
+
+---
+
+## Drafts & publishing (private events)
+
+You can work on an event **before announcing it**. In `events.json`, add `"published": false`
+to that event:
+
+```json
+{ "slug": "claude-for-work", "title": "Claude-For-Work", "date": "…", "published": false }
+```
+
+What that does:
+- It's **hidden from every public list** — your homepage event list *and* the global
+  `lunatechs.social/events` feed. The raw `events.json` the public downloads doesn't
+  contain it either, so nothing leaks.
+- Its **marketing/landing page** (`events/<slug>/index.html`) is still **public by direct
+  link** — so you can build it and share the URL with your team while you prep.
+
+**To announce it:** set `"published": true` (or delete the line) and push. It appears in
+the lists within seconds (and flows to the global feed on the next sync).
+
+### Seeing your drafts while logged in
+Sign in at **`app.lunatechs.social`** (this sets a `lunatechs.social` login cookie). Then,
+as an **organizer/leader of this chapter** (or an admin), open **`lunatechs.social/events`**
+— a **"Show unpublished"** toggle appears that reveals your draft events with a **DRAFT**
+badge. The public never sees that toggle or the drafts.
+
+> The toggle appears on your **chapter homepage** (it uses the shared `events.html`
+> include) **and** the global `/events` page. The public never sees it.
+
+### Who can see drafts
+- **admin** — all chapters' drafts (system-wide).
+- **leader / organizer** of a chapter — that chapter's drafts.
+- Roles are assigned by an **admin** in `app.lunatechs.social` → Members (the person must
+  sign in there once first). App login is **separate** from GitHub push access.
