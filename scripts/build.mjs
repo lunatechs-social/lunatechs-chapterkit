@@ -72,6 +72,17 @@ function writePublicEvents(out) {
   if (!Array.isArray(data)) return;
   const published = data.filter((e) => e && e.published !== false);
   fs.writeFileSync(evPath, JSON.stringify(published, null, 2) + '\n');
+
+  // Also emit the FULL list (incl. drafts) to a gated path. nginx serves /_drafts/*
+  // only behind an auth_request check (organizer/leader of this chapter, or admin),
+  // so the public never gets it — but a logged-in organizer's "Show unpublished"
+  // toggle can fetch it. Only emitted when there's actually a draft to gate.
+  const hasDraft = data.some((e) => e && e.published === false);
+  if (hasDraft) {
+    const draftsDir = path.join(out, '_drafts');
+    fs.mkdirSync(draftsDir, { recursive: true });
+    fs.writeFileSync(path.join(draftsDir, 'events.json'), JSON.stringify(data, null, 2) + '\n');
+  }
 }
 
 fs.rmSync(DIST, { recursive: true, force: true });

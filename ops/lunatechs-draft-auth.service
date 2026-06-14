@@ -1,0 +1,15 @@
+[Unit]
+Description=LunaTechs draft-feed auth validator (nginx auth_request -> app API)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStart=/usr/bin/node /home/ubuntu/draft-auth.mjs
+Environment=PORT=9002
+Environment=LT_API=https://hdfjlrjjxh.execute-api.us-east-1.amazonaws.com
+Restart=always
+RestartSec=3
+User=ubuntu
+
+[Install]
+WantedBy=multi-user.target
