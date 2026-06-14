@@ -7,7 +7,7 @@ import path from 'node:path';
 
 const ROOT = process.cwd();
 const DIST = path.join(ROOT, 'dist');
-const SKIP = new Set(['scripts', 'shared', 'dist', 'node_modules', '.git', '.github']);
+const SKIP = new Set(['scripts', 'shared', 'dist', 'node_modules', '.git', '.github', 'ops']);
 const nav = fs.readFileSync(path.join(ROOT, 'shared', 'nav.html'), 'utf8');
 const footer = fs.readFileSync(path.join(ROOT, 'shared', 'footer.html'), 'utf8');
 const events = fs.readFileSync(path.join(ROOT, 'shared', 'events.html'), 'utf8');
