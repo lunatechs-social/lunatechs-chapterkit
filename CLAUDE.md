@@ -15,7 +15,12 @@ See `README.md` for the full layout. Quick map:
 - `_starter/` — the template a new chapter copies (`index.html`, `events.json`,
   `photos.json`, `chapter.json`, `dev.sh`, `CLAUDE.md`).
 - `.github/workflows/kit-ci.yml` — smoke-tests the starter on every change to the kit.
-- `.github/workflows/assemble.yml` — reusable workflow chapters call to build+validate+deploy.
+
+Deploy is **pull-based on the server**, not GitHub Actions: a push to a chapter's `main`
+fires a webhook to the LunaTechs Lightsail box, which runs `deploy-chapter.sh <slug>`
+(reset → build through this kit → publish to nginx at `<slug>.lunatechs.social`, same box
+as the global site, CDN in front). There is **no S3/CloudFront path** — the old
+`assemble.yml` S3 workflow has been removed.
 
 ## Rules that flow down to every chapter (validate.mjs enforces)
 1. **No third-party resources** (no Google Fonts / CDN scripts) — fonts are first-party.

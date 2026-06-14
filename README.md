@@ -21,9 +21,11 @@ the build, and the guardrails. One chapter can never see or break another.
 1. A chapter has its **own repo** (`lunatechs-chapter-<slug>`) seeded from `_starter/`.
 2. The owner edits `index.html` + `events.json` and runs **`./dev.sh`** to preview
    (it pulls this kit, drops their content in, builds, and serves locally).
-3. On push, the chapter's CI calls this kit's reusable **assemble** workflow → build →
-   validate → deploy to `<slug>.lunatechs.social`. A bad change fails validation and
-   never ships; no other chapter is touched.
+3. On push to `main`, a **GitHub webhook** hits the LunaTechs server (Lightsail), which
+   runs `deploy-chapter.sh <slug>` → pulls the repo → builds it through this kit →
+   publishes to nginx at `<slug>.lunatechs.social` (same box as the global site, CDN in
+   front). **No S3, no GitHub Actions.** A bad change fails the build and never ships;
+   no other chapter is touched.
 
 ## Start a new chapter
 ```bash

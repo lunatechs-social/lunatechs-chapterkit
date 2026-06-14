@@ -26,3 +26,27 @@ this starter is just a head start. Read the root `CLAUDE.md` for the rules.
   global system later, for free.)
 
 Placeholders to fill: `{{CITY}}`, `{{TAGLINE}}`, `{{JOIN_URL}}`.
+## Custom pages (recaps, event landing pages) & the /links tree
+
+Beyond `index.html`, this repo can hold as many freeform pages as you like — each one
+publishes at its path and opts into the shared shell just by keeping the include lines.
+
+- **Event marketing / landing pages** — `events/<slug>/index.html` (copy the kit's
+  `_starter/events/example/`). A full custom page you share to sell an event. Set the
+  event's `landingUrl` in `events.json` to `https://<subdomain>/events/<slug>/`.
+- **Recap pages** — after an event, either reuse that same `events/<slug>/` page as the
+  recap, or copy `_starter/recaps/example/` to `recaps/<slug>/`. Then set the event's
+  `recapUrl` (+ `featuredPhoto`, `stats`) in `events.json`.
+- **Contact / link-tree** — auto-built at `/links/` from `chapter.json`'s `links` array
+  (`{type,title,sub,url}`); global LunaTechs links are appended automatically. You edit
+  the data in `chapter.json`, not the page. Leave `slug` + `subdomain` untouched.
+
+Per-page rules are the same as the homepage: keep the shared nav/footer includes, no
+third-party `<script>`/`<link>`, embed YouTube rather than hosting video files.
+
+## Deploy (for reference — see DEPLOY.md)
+
+Push to `main` → GitHub webhook → the LunaTechs **Lightsail** server runs
+`deploy-chapter.sh <slug>` (git reset → build through the kit → publish to nginx at
+`<subdomain>`). Same box/nginx as the global site, fronted by a CDN. **Not S3, no
+GitHub Actions.** Preview first with `./dev.sh`. Full playbook: **`DEPLOY.md`**.
