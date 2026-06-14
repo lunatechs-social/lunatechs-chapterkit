@@ -58,12 +58,29 @@ function inlineAll(dir) {
   }
 }
 
+// Strip unpublished events from the PUBLIC events.json the browser fetches.
+// Source of truth is the chapter's events.json (which may hold `published:false`
+// drafts); the public build only ever ships published events, so a draft never
+// leaks via the raw file or the rendered list. (Logged-in organizers get drafts
+// from a separately auth-gated feed — see Phase 3.)
+function writePublicEvents(out) {
+  const evPath = path.join(out, 'events.json');
+  if (!fs.existsSync(evPath)) return;
+  let data;
+  try { data = JSON.parse(fs.readFileSync(evPath, 'utf8')); }
+  catch { return; } // validate.mjs reports bad JSON; don't crash the whole build here
+  if (!Array.isArray(data)) return;
+  const published = data.filter((e) => e && e.published !== false);
+  fs.writeFileSync(evPath, JSON.stringify(published, null, 2) + '\n');
+}
+
 fs.rmSync(DIST, { recursive: true, force: true });
 const list = chapters();
 for (const ch of list) {
   const out = path.join(DIST, ch);
   copyDir(path.join(ROOT, ch), out);
   inlineAll(out); // every .html in the chapter, not just index.html
+  writePublicEvents(out); // drop `published:false` drafts from the shipped events.json
 
   // generate this chapter's /links/ linktree from the shared template, injecting
   // its chapter.json (city + local links). Shared brand links live in the template.
